@@ -21,13 +21,8 @@
     </div>
 
     <div>
-        <label class="block text-sm text-gray-700">NIK (16 Digit)</label>
-        <input type="number" name="nik" value="{{ old('nik', $member->nik ?? '') }}"
-            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
-            required>
-        @error('nik')
-            <span class="text-xs text-red-600">{{ $message }}</span>
-        @enderror
+        <x-forms.numeric-input name="nik" label="NIK (Nomor KTP)" mode="nik" required="true"
+            placeholder="16 Digit Angka" :value="$member->nik" />
     </div>
 
     <div class="sm:col-span-2">
@@ -106,9 +101,8 @@
     </div>
 
     <div>
-        <label class="block text-sm text-gray-700">No HP / WA</label>
-        <input type="text" name="no_hp" value="{{ old('no_hp', $member->no_hp ?? '') }}"
-            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
+        <x-forms.numeric-input name="no_hp" label="No HP / WA" mode="no_hp" required="true"
+            placeholder="10 Digit Angka" :value="$member->no_hp" />
     </div>
 
     <div>

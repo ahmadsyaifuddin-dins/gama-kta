@@ -12,9 +12,26 @@ class MemberController extends Controller
 {
     public function index()
     {
-        $members = Member::latest()->paginate(10);
+        // Urutkan: Pending duluan, baru tanggal terbaru
+        $members = Member::orderByRaw("status = 'pending' DESC")
+            ->latest()
+            ->paginate(10);
 
         return view('members.index', compact('members'));
+    }
+
+    // TAMBAHKAN METHOD APPROVE
+    public function approve(Member $member)
+    {
+        // Ubah nomor anggota dari REG-XXX jadi KUD-GM-XXX
+        $newNumber = 'KUD-GM-'.str_pad($member->id, 4, '0', STR_PAD_LEFT);
+
+        $member->update([
+            'status' => 'active',
+            'nomor_anggota' => $newNumber,
+        ]);
+
+        return back()->with('success', 'Anggota berhasil diverifikasi & diaktifkan!');
     }
 
     public function create()
@@ -81,7 +98,7 @@ class MemberController extends Controller
             }
         }
 
-        // PERBAIKAN: Handle Bukti Bayar secara terpisah agar aman
+        // Handle Bukti Bayar secara terpisah agar aman
         if ($request->hasFile('file_bukti_bayar')) {
             // Hapus bukti bayar lama jika ada (Biar server gak penuh sampah)
             if ($member->file_bukti_bayar) {
@@ -132,7 +149,6 @@ class MemberController extends Controller
 
         $validationUrl = route('members.check', $member->id);
 
-        // --- PERBAIKAN DISINI ---
         // 1. Pakai format('svg') biar gak butuh ImageMagick
         // 2. Bungkus pakai base64_encode biar jadi string gambar yang aman buat PDF
         $qrCode = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate($validationUrl));

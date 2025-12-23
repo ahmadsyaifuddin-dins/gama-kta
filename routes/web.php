@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// ROUTE PUBLIK (Tanpa Login)
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/daftar-anggota', [LandingController::class, 'register'])->name('public.register');
+Route::post('/daftar-anggota', [LandingController::class, 'store'])->name('public.store');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -26,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('members', MemberController::class);
+    Route::put('/members/{member}/approve', [MemberController::class, 'approve'])->name('members.approve');
     Route::get('members/{member}/print-card', [MemberController::class, 'printCard'])->name('members.print_card');
     Route::get('members/{member}/print-receipt', [MemberController::class, 'printReceipt'])->name('members.print_receipt');
 

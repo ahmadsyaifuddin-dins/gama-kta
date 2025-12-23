@@ -15,6 +15,7 @@ class Member extends Model
     protected $fillable = [
         'nomor_anggota',
         'nik',
+        'status',
         'nama_lengkap',
         'tempat_lahir',
         'tanggal_lahir',
