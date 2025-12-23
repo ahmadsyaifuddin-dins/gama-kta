@@ -6,6 +6,7 @@ use App\Http\Requests\MemberRequest;
 use App\Models\Member;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MemberController extends Controller
 {
@@ -124,13 +125,19 @@ class MemberController extends Controller
 
     public function printCard(Member $member)
     {
-        // 1. Update Status Cetak jadi "Sudah" (1) & Timestamp
         $member->update([
             'status_cetak' => true,
             'tanggal_cetak' => now(),
         ]);
 
-        $pdf = Pdf::loadView('members.card_pdf', compact('member'));
+        $validationUrl = route('members.check', $member->id);
+
+        // --- PERBAIKAN DISINI ---
+        // 1. Pakai format('svg') biar gak butuh ImageMagick
+        // 2. Bungkus pakai base64_encode biar jadi string gambar yang aman buat PDF
+        $qrCode = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate($validationUrl));
+
+        $pdf = Pdf::loadView('members.card_pdf', compact('member', 'qrCode'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('KTA-'.$member->nomor_anggota.'.pdf');

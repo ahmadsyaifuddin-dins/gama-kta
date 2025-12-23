@@ -150,6 +150,27 @@
             z-index: 0;
             pointer-events: none;
         }
+
+        .qr-area {
+            position: absolute;
+            bottom: 5px;
+            right: 42mm;
+            width: 13mm;
+            height: 13mm;
+            z-index: 20;
+            background: white;
+            padding: 2px;
+            /* Tambah padding dikit biar rapi */
+            border-radius: 2px;
+            overflow: hidden;
+            /* Jaga-jaga biar gak bluber */
+        }
+
+        /* Tambahan: Paksa SVG ngikutin ukuran kotak */
+        .qr-area svg {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -213,6 +234,10 @@
                     <span class="label">Berlaku</span>: Seumur Hidup
                 </div>
             </div>
+        </div>
+
+        <div class="qr-area">
+            <img src="data:image/svg+xml;base64, {{ $qrCode }}" style="width: 100%; height: 100%;">
         </div>
 
         <div class="footer">
