@@ -57,7 +57,7 @@
                                             <p class="font-bold text-gray-800">{{ $member->nama_lengkap }}</p>
                                             <p class="text-xs text-gray-500">{{ $member->nik }}</p>
                                             <p class="text-[10px] text-gray-400">Gabung:
-                                                {{ $member->tanggal_bergabung->format('d M Y') }}</p>
+                                                {{ $member->tanggal_bergabung->translatedFormat('d M Y') }}</p>
                                         </div>
                                     </div>
                                 </td>
