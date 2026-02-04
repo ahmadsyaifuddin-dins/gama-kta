@@ -45,6 +45,7 @@ class MemberRequest extends FormRequest
             // Pembayaran
             'file_bukti_bayar' => 'nullable|image|max:2048',
             'tanggal_bayar' => 'nullable|date',
+            'status' => 'required|in:active,inactive,stopped,pending',
 
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];

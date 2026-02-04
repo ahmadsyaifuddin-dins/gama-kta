@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-    
+
     @if ($errors->any())
         <div class="sm:col-span-2 p-4 mb-2 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
             <p class="font-bold mb-1">Terjadi kesalahan input:</p>
@@ -11,10 +11,36 @@
         </div>
     @endif
 
+    {{-- Hanya tampilkan jika sedang mengedit data member yang sudah ada --}}
+    @if (isset($member) && $member->exists)
+        <div class="sm:col-span-2 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <label class="block text-sm font-bold text-gray-800 mb-2">Status Keanggotaan</label>
+            <select name="status"
+                class="block w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple font-semibold
+                {{ $member->status == 'active' ? 'text-green-700' : ($member->status == 'stopped' ? 'text-red-700' : 'text-gray-700') }}">
+
+                <option value="active" {{ old('status', $member->status) == 'active' ? 'selected' : '' }}>
+                    AKTIF - Anggota Resmi
+                </option>
+                <option value="inactive" {{ old('status', $member->status) == 'inactive' ? 'selected' : '' }}>
+                    PASIF / NON-AKTIF (Cuti sementara)
+                </option>
+                <option value="stopped" {{ old('status', $member->status) == 'stopped' ? 'selected' : '' }}>
+                    BERHENTI / KELUAR (Mengundurkan diri/Meninggal)
+                </option>
+                <option value="pending" {{ old('status', $member->status) == 'pending' ? 'selected' : '' }}>
+                    PENDING (Menunggu Verifikasi)
+                </option>
+            </select>
+            <p class="text-xs text-gray-500 mt-2">
+                *Ubah status ke <b>"Berhenti"</b> jika anggota resmi mengundurkan diri atau dikeluarkan.
+            </p>
+        </div>
+    @endif
+
     <div>
         <label class="block text-sm text-gray-700">Nomor Anggota</label>
-        <input type="text" name="nomor_anggota" 
-            value="{{ old('nomor_anggota', $member->nomor_anggota ?? '') }}"
+        <input type="text" name="nomor_anggota" value="{{ old('nomor_anggota', $member->nomor_anggota ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             placeholder="Contoh: KUD-GM-0001" required>
         @error('nomor_anggota')
@@ -24,28 +50,20 @@
 
     <div>
         {{-- PERBAIKAN DISINI: Pakai null coalescing operator (??) --}}
-        <x-forms.numeric-input 
-            name="nik" 
-            label="NIK (Nomor KTP)" 
-            mode="nik" 
-            required="true"
-            placeholder="16 Digit Angka" 
-            :value="$member->nik ?? ''" 
-        />
+        <x-forms.numeric-input name="nik" label="NIK (Nomor KTP)" mode="nik" required="true"
+            placeholder="16 Digit Angka" :value="$member->nik ?? ''" />
     </div>
 
     <div class="sm:col-span-2">
         <label class="block text-sm text-gray-700">Nama Lengkap</label>
-        <input type="text" name="nama_lengkap" 
-            value="{{ old('nama_lengkap', $member->nama_lengkap ?? '') }}"
+        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $member->nama_lengkap ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             required>
     </div>
 
     <div>
         <label class="block text-sm text-gray-700">Tempat Lahir</label>
-        <input type="text" name="tempat_lahir" 
-            value="{{ old('tempat_lahir', $member->tempat_lahir ?? '') }}"
+        <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $member->tempat_lahir ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             required>
     </div>
@@ -62,15 +80,16 @@
         <label class="block text-sm text-gray-700">Jenis Kelamin</label>
         <select name="jenis_kelamin"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
-            <option value="L" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-            <option value="P" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+            <option value="L" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>
+                Laki-laki</option>
+            <option value="P" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>
+                Perempuan</option>
         </select>
     </div>
 
     <div>
         <label class="block text-sm text-gray-700">Pekerjaan</label>
-        <input type="text" name="pekerjaan" 
-            value="{{ old('pekerjaan', $member->pekerjaan ?? '') }}"
+        <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $member->pekerjaan ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
     </div>
 
@@ -99,8 +118,7 @@
 
     <div>
         <label class="block text-sm text-gray-700">Dusun</label>
-        <input type="text" name="dusun" 
-            value="{{ old('dusun', $member->dusun ?? '') }}"
+        <input type="text" name="dusun" value="{{ old('dusun', $member->dusun ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             placeholder="Nama Dusun" required>
     </div>
@@ -113,14 +131,8 @@
 
     <div>
         {{-- PERBAIKAN DISINI: Pakai null coalescing operator (??) --}}
-        <x-forms.numeric-input 
-            name="no_hp" 
-            label="No HP / WA" 
-            mode="no_hp" 
-            required="true"
-            placeholder="10 Digit Angka" 
-            :value="$member->no_hp ?? ''" 
-        />
+        <x-forms.numeric-input name="no_hp" label="No HP / WA" mode="no_hp" required="true"
+            placeholder="10 Digit Angka" :value="$member->no_hp ?? ''" />
     </div>
 
     <div>
