@@ -163,5 +163,42 @@
             </form>
         </div>
 
+        <div class="p-6 bg-white rounded-lg shadow-xs border border-pink-200">
+            <div class="flex items-center mb-4">
+                <div class="p-3 mr-4 text-pink-700 bg-pink-100 rounded-full">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-700">Laporan Status Keanggotaan</h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">Filter data anggota berdasarkan status (Aktif/Pasif/Berhenti).</p>
+
+            <form action="{{ route('reports.export') }}" method="GET">
+                <input type="hidden" name="report_type" value="status">
+
+                <select name="status"
+                    class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none mb-4">
+                    <option value="semua">-- Semua Status --</option>
+                    <option value="active">Anggota Aktif</option>
+                    <option value="inactive">Pasif / Non-Aktif</option>
+                    <option value="stopped">Berhenti / Keluar</option>
+                    <option value="pending">Pending (Menunggu)</option>
+                </select>
+
+                <div class="flex gap-2">
+                    <button type="submit" name="action" value="excel"
+                        class="w-1/2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                        Excel
+                    </button>
+                    <button type="submit" name="action" value="pdf"
+                        class="w-1/2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                        PDF
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </x-app-layout>

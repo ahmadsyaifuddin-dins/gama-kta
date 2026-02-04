@@ -3,35 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\Saving; // Import Model Simpanan
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Widget Statistik
+        // 1. STATISTIK UTAMA
         $totalAnggota = Member::count();
-
-        // Hitung uang hanya dari yang sudah upload bukti bayar
-        $totalUang = Member::whereNotNull('file_bukti_bayar')->sum('biaya_pendaftaran');
-
-        // Hitung yang belum dicetak kartunya
         $belumCetak = Member::where('status_cetak', false)->count();
-
-        // Hitung Total Luas Lahan (Opsional, buat keren-kerenan data)
         $totalLahan = Member::sum('luasan_lahan');
 
-        // 2. Data Grafik (Group by Dusun)
-        // Hasilnya: Dusun A => 10 orang, Dusun B => 5 orang
-        $chartData = Member::select('dusun', DB::raw('count(*) as total'))
+        // 2. KEUANGAN (Pendaftaran + Simpanan)
+        // Hitung uang pendaftaran dari anggota yg sudah upload bukti bayar
+        $uangPendaftaran = Member::whereNotNull('file_bukti_bayar')->count() * 150000;
+        // Hitung total simpanan/iuran dari tabel savings
+        $uangSimpanan = Saving::sum('jumlah');
+
+        $totalUang = $uangPendaftaran + $uangSimpanan;
+
+        // 3. STATISTIK STATUS (BARU)
+        $statusCounts = [
+            'active' => Member::where('status', 'active')->count(),
+            'inactive' => Member::where('status', 'inactive')->count(),
+            'stopped' => Member::where('status', 'stopped')->count(),
+            'pending' => Member::where('status', 'pending')->count(),
+        ];
+
+        // 4. CHART DATA (Sebaran Dusun)
+        $dusunStats = Member::select('dusun', DB::raw('count(*) as total'))
             ->groupBy('dusun')
-            ->pluck('total', 'dusun')
-            ->all();
+            ->pluck('total', 'dusun');
 
-        // Pisahkan Keys (Nama Dusun) dan Values (Jumlah) untuk ChartJS
-        $labels = array_keys($chartData);
-        $data = array_values($chartData);
+        $labels = $dusunStats->keys();
+        $data = $dusunStats->values();
 
-        return view('dashboard', compact('totalAnggota', 'totalUang', 'belumCetak', 'totalLahan', 'labels', 'data'));
+        return view('dashboard', compact(
+            'totalAnggota',
+            'belumCetak',
+            'totalLahan',
+            'totalUang',
+            'labels',
+            'data',
+            'statusCounts' // Kirim variable baru ini
+        ));
     }
 }

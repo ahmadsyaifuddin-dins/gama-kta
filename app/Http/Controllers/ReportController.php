@@ -38,6 +38,7 @@ class ReportController extends Controller
             'end_date' => $request->end_date,
             'dusun' => $request->dusun,
             'status_cetak' => $request->status_cetak,
+            'status' => $request->status,
         ];
     }
 
@@ -45,14 +46,23 @@ class ReportController extends Controller
     {
         $query = Member::query();
 
-        // LOGIKA KEUANGAN
+        // 1. LOGIKA KEUANGAN (Tetap sama)
         if ($filters['report_type'] == 'finance') {
             $query->whereNotNull('file_bukti_bayar');
             if ($filters['start_date'] && $filters['end_date']) {
                 $query->whereBetween('tanggal_bayar', [$filters['start_date'], $filters['end_date']]);
             }
         }
-        // LOGIKA UMUM (Anggota)
+
+        // 2. LOGIKA LAPORAN STATUS (BARU)
+        elseif ($filters['report_type'] == 'status') {
+            // Jika user memilih filter status spesifik (bukan 'semua')
+            if (! empty($filters['status']) && $filters['status'] != 'semua') {
+                $query->where('status', $filters['status']);
+            }
+        }
+
+        // 3. LOGIKA UMUM (Tetap sama)
         else {
             if ($filters['start_date'] && $filters['end_date']) {
                 $query->whereBetween('tanggal_bergabung', [$filters['start_date'], $filters['end_date']]);
@@ -103,6 +113,22 @@ class ReportController extends Controller
             $title = 'Laporan Seluruh Anggota';
             $subtitle = 'Semua Data';
 
+            if ($filters['report_type'] == 'status') {
+                $title = 'Laporan Status Keanggotaan';
+
+                if (empty($filters['status']) || $filters['status'] == 'semua') {
+                    $subtitle = 'Semua Status (Aktif, Pasif, Berhenti, Pending)';
+                } else {
+                    // Terjemahkan kode status ke Bahasa Indonesia
+                    $statusMap = [
+                        'active' => 'ANGGOTA AKTIF',
+                        'inactive' => 'PASIF / NON-AKTIF',
+                        'stopped' => 'BERHENTI / KELUAR',
+                        'pending' => 'PENDING (Menunggu Verifikasi)',
+                    ];
+                    $subtitle = 'Status: '.($statusMap[$filters['status']] ?? strtoupper($filters['status']));
+                }
+            }
             // 1. CEK FILTER DUSUN (Prioritas)
             // Kita cek apakah ada input 'dusun' (baik itu 'semua' atau nama dusun)
             if (! empty($filters['dusun'])) {

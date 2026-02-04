@@ -71,6 +71,7 @@
 
                                 <td class="px-4 py-3 text-xs text-center">
                                     @if ($member->status == 'pending')
+                                        {{-- STATUS PENDING (VERIFIKASI) --}}
                                         <div class="flex flex-col items-center gap-2">
                                             <span
                                                 class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full animate-pulse border border-orange-200">
@@ -92,10 +93,23 @@
                                                 </button>
                                             </form>
                                         </div>
-                                    @else
+                                    @elseif ($member->status == 'active')
+                                        {{-- STATUS AKTIF --}}
                                         <span
                                             class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full border border-green-200">
                                             AKTIF
+                                        </span>
+                                    @elseif ($member->status == 'inactive')
+                                        {{-- STATUS PASIF --}}
+                                        <span
+                                            class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full border border-yellow-200">
+                                            PASIF
+                                        </span>
+                                    @elseif ($member->status == 'stopped')
+                                        {{-- STATUS BERHENTI --}}
+                                        <span
+                                            class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full border border-red-200">
+                                            BERHENTI
                                         </span>
                                     @endif
                                 </td>

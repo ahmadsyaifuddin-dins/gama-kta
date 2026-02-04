@@ -30,6 +30,13 @@ class MemberExport implements FromCollection, ShouldAutoSize, WithHeadings, With
                 $query->whereBetween('tanggal_bayar', [$this->filter['start_date'], $this->filter['end_date']]);
             }
         }
+
+        if (isset($this->filter['report_type']) && $this->filter['report_type'] == 'status') {
+            if (! empty($this->filter['status']) && $this->filter['status'] != 'semua') {
+                $query->where('status', $this->filter['status']);
+            }
+        }
+
         // 2. LOGIKA UMUM
         else {
             if (isset($this->filter['start_date']) && isset($this->filter['end_date'])) {
