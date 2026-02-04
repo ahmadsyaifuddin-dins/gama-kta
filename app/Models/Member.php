@@ -49,4 +49,10 @@ class Member extends Model
         'tanggal_cetak' => 'datetime',
         'tanggal_bayar' => 'date',
     ];
+
+    // Relasi: Satu anggota punya banyak data simpanan
+    public function savings()
+    {
+        return $this->hasMany(Saving::class);
+    }
 }
