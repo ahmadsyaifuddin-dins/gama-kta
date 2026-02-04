@@ -1,4 +1,5 @@
 <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+    
     @if ($errors->any())
         <div class="sm:col-span-2 p-4 mb-2 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
             <p class="font-bold mb-1">Terjadi kesalahan input:</p>
@@ -12,7 +13,8 @@
 
     <div>
         <label class="block text-sm text-gray-700">Nomor Anggota</label>
-        <input type="text" name="nomor_anggota" value="{{ old('nomor_anggota', $member->nomor_anggota ?? '') }}"
+        <input type="text" name="nomor_anggota" 
+            value="{{ old('nomor_anggota', $member->nomor_anggota ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             placeholder="Contoh: KUD-GM-0001" required>
         @error('nomor_anggota')
@@ -21,20 +23,29 @@
     </div>
 
     <div>
-        <x-forms.numeric-input name="nik" label="NIK (Nomor KTP)" mode="nik" required="true"
-            placeholder="16 Digit Angka" :value="$member->nik" />
+        {{-- PERBAIKAN DISINI: Pakai null coalescing operator (??) --}}
+        <x-forms.numeric-input 
+            name="nik" 
+            label="NIK (Nomor KTP)" 
+            mode="nik" 
+            required="true"
+            placeholder="16 Digit Angka" 
+            :value="$member->nik ?? ''" 
+        />
     </div>
 
     <div class="sm:col-span-2">
         <label class="block text-sm text-gray-700">Nama Lengkap</label>
-        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $member->nama_lengkap ?? '') }}"
+        <input type="text" name="nama_lengkap" 
+            value="{{ old('nama_lengkap', $member->nama_lengkap ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             required>
     </div>
 
     <div>
         <label class="block text-sm text-gray-700">Tempat Lahir</label>
-        <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $member->tempat_lahir ?? '') }}"
+        <input type="text" name="tempat_lahir" 
+            value="{{ old('tempat_lahir', $member->tempat_lahir ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             required>
     </div>
@@ -42,7 +53,7 @@
     <div>
         <label class="block text-sm text-gray-700">Tanggal Lahir</label>
         <input type="date" name="tanggal_lahir"
-            value="{{ old('tanggal_lahir', isset($member) ? $member->tanggal_lahir->format('Y-m-d') : '') }}"
+            value="{{ old('tanggal_lahir', isset($member) && $member->tanggal_lahir ? $member->tanggal_lahir->format('Y-m-d') : '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             required>
     </div>
@@ -51,16 +62,15 @@
         <label class="block text-sm text-gray-700">Jenis Kelamin</label>
         <select name="jenis_kelamin"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
-            <option value="L" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>
-                Laki-laki</option>
-            <option value="P" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>
-                Perempuan</option>
+            <option value="L" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+            <option value="P" {{ old('jenis_kelamin', $member->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
         </select>
     </div>
 
     <div>
         <label class="block text-sm text-gray-700">Pekerjaan</label>
-        <input type="text" name="pekerjaan" value="{{ old('pekerjaan', $member->pekerjaan ?? '') }}"
+        <input type="text" name="pekerjaan" 
+            value="{{ old('pekerjaan', $member->pekerjaan ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
     </div>
 
@@ -89,7 +99,8 @@
 
     <div>
         <label class="block text-sm text-gray-700">Dusun</label>
-        <input type="text" name="dusun" value="{{ old('dusun', $member->dusun ?? '') }}"
+        <input type="text" name="dusun" 
+            value="{{ old('dusun', $member->dusun ?? '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
             placeholder="Nama Dusun" required>
     </div>
@@ -101,14 +112,21 @@
     </div>
 
     <div>
-        <x-forms.numeric-input name="no_hp" label="No HP / WA" mode="no_hp" required="true"
-            placeholder="10 Digit Angka" :value="$member->no_hp" />
+        {{-- PERBAIKAN DISINI: Pakai null coalescing operator (??) --}}
+        <x-forms.numeric-input 
+            name="no_hp" 
+            label="No HP / WA" 
+            mode="no_hp" 
+            required="true"
+            placeholder="10 Digit Angka" 
+            :value="$member->no_hp ?? ''" 
+        />
     </div>
 
     <div>
         <label class="block text-sm text-gray-700">Tanggal Bergabung</label>
         <input type="date" name="tanggal_bergabung"
-            value="{{ old('tanggal_bergabung', isset($member) ? $member->tanggal_bergabung->format('Y-m-d') : date('Y-m-d')) }}"
+            value="{{ old('tanggal_bergabung', isset($member) && $member->tanggal_bergabung ? $member->tanggal_bergabung->format('Y-m-d') : date('Y-m-d')) }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none focus:shadow-outline-purple">
     </div>
 
@@ -130,9 +148,8 @@
         @enderror
     </div>
 
-    <div class="sm:col-span-2">
-    </div>
 </div>
+
 <hr class="my-8 border-gray-300">
 <h3 class="text-lg font-semibold text-gray-700 mb-4">Berkas Persyaratan (Lampiran)</h3>
 
@@ -149,7 +166,7 @@
             </div>
         @endif
         <input type="file" name="file_sertifikat_tanah"
-            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
         <span class="text-xs text-gray-500">PDF/JPG (Max 2MB)</span>
         @error('file_sertifikat_tanah')
             <span class="text-xs text-red-600 block">{{ $message }}</span>
@@ -167,7 +184,7 @@
             </div>
         @endif
         <input type="file" name="file_ktp"
-            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
     </div>
 
     <div>
@@ -181,7 +198,7 @@
             </div>
         @endif
         <input type="file" name="file_kk"
-            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-purple-400 focus:outline-none text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+            class="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
     </div>
 
 </div>
@@ -207,11 +224,9 @@
     <div>
         <label class="block text-sm font-bold text-gray-700">Tanggal Bayar</label>
         <input type="date" name="tanggal_bayar"
-            value="{{ old('tanggal_bayar', isset($member->tanggal_bayar) ? $member->tanggal_bayar->format('Y-m-d') : '') }}"
+            value="{{ old('tanggal_bayar', isset($member) && $member->tanggal_bayar ? $member->tanggal_bayar->format('Y-m-d') : '') }}"
             class="block w-full mt-1 text-sm border-gray-300 rounded-md">
     </div>
-</div>
-
 </div>
 
 <div class="flex justify-end mt-6">
